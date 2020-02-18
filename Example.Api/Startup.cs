@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
@@ -14,6 +15,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace Example.Api
 {
@@ -77,10 +79,12 @@ namespace Example.Api
                 })
                 .AddJwtBearer(options =>
                 {
-                    var authSettings = Configuration.GetSection("AzureAd").Get<AzureAdOptions>();
+                var authSettings = Configuration.GetSection("AzureAd").Get<AzureAdOptions>();
 
-                    options.Audience = authSettings.ClientId;
-                    options.Authority = authSettings.Authority;
+                options.Audience = authSettings.ClientId;
+                options.Authority = authSettings.Authority;
+
+                options.TokenValidationParameters = new TokenValidationParameters { RoleClaimType = ClaimTypes.Role };
                 });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

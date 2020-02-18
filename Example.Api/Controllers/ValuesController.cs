@@ -6,7 +6,7 @@ namespace Example.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Writer")]
     public class ValuesController : ControllerBase
     {
         private static readonly List<string> _values = new List<string> { "X", "Y" };
